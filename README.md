@@ -23,7 +23,7 @@ flowchart LR
   H --> U
 ```
 
-The Waiter transports a fictional question and retrieved passages. No webhook, MCP connection, ticket write, or outbound message is part of the classroom prototype. In production, any such connection would require separate scoped access and approval. The Fridge stores policy chunks and embeddings where the selected RAG platform supports them; verify the platform's actual implementation before naming a particular vector database.
+The Waiter transports a fictional question and retrieved passages. No webhook, MCP connection, ticket write, or outbound message is part of the classroom prototype. In production, any such connection would require separate scoped access and approval. The Fridge contains the synthetic policy PDF and rule chunks indexed in memory with BM25 lexical retrieval. This prototype does not use embeddings or a persistent vector database.
 
 ## Demonstration and red team audit
 
@@ -39,7 +39,7 @@ The RAG service and any future ticket connector would each receive a distinct **
 
 ## Model routing and context controls
 
-The proposed enterprise route uses a lower cost distilled or small model for routine intent classification, retrieval query rewriting, and straightforward cited drafts. Route complex exceptions, conflicting policy passages, legal risk indicators, and uncertain calculations to a frontier model **and** a human reviewer. This is a design plan, not a claim about Meta Muse's selectable models. Bound retrieved context to the top three policy chunks (about 1,500 tokens total), reserve about 1,000 tokens for the system prompt and case facts, and cap output near 400 tokens. Reject irrelevant chunks and never truncate away a rule citation. Monitor cost per case, context length, citation coverage, escalation rate, and unsupported claims. Verify current model prices before deployment ([Anthropic API pricing](https://platform.claude.com/docs/en/about-claude/pricing)).
+The current local prototype uses Qwen3 4B Instruct for complete routine cases and a deterministic safety gate for incomplete or high-risk cases. Its retrieval adds required policy clauses to the five highest BM25 matches, and its LLM output cap is 900 tokens. In a proposed enterprise deployment, route high-volume routine tasks to a lower-cost distilled or small model. Route complex exceptions, conflicting policy passages, legal risk indicators, and uncertain calculations to a frontier model **and** a human reviewer. Cap retrieved context and output by task, keep all governing rule citations, and monitor cost per case, context length, citation coverage, escalation rate, and unsupported claims. These are design controls, not claims that the local demo already implements every production feature. Verify current model prices before deployment ([Anthropic API pricing](https://platform.claude.com/docs/en/about-claude/pricing)).
 
 ## One-year CFO projection — illustrative assumptions
 
